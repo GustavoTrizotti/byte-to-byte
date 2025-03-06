@@ -16,7 +16,14 @@ export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
 
   const addProduct = (product: Product) => {
-    if (products.find((p) => p.name === product.name)) {
+    if (
+      products.find(
+        (p) =>
+          p.name === product.name &&
+          p.section === product.section &&
+          p.brand === product.brand
+      )
+    ) {
       toast.error("Produto já cadastrado!");
     } else {
       const { id, ...rest } = product;
@@ -30,12 +37,11 @@ export default function Home() {
     <div className="dark flex flex-col min-h-screen text-neutral-50 font-[family-name:var(--font-outfit)] overflow-auto">
       <DottedContainer className="flex flex-col items-center w-full">
         <Header />
-        <Title />
+        <Title hasProducts={products.length > 0} />
         <CreateProduct addProduct={addProduct} />
         <Sections products={products} />
       </DottedContainer>
       <Separator />
-
       <Footer />
     </div>
   );

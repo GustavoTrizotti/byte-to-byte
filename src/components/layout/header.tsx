@@ -9,8 +9,9 @@ export function Header() {
         <h3 className="text-lg font-bold">Byte to Byte</h3>
       </div>
       <div className="flex flex-row items-center space-x-4">
-        <span className="flex items-center gap-1 text-sm opacity-30">
-          Feito com <Heart size={14} strokeWidth={3} /> por Gustavo Trizotti
+        <span className="hidden md:flex items-center gap-1 text-sm opacity-30">
+          Feito com <Heart size={14} strokeWidth={3} /> por Gustavo Trizotti e
+          Arthur Mascaro
         </span>
         <a href="https://github.com/GustavoTrizotti/byte-to-byte">
           <Image

@@ -1,9 +1,13 @@
-import { Package, ShoppingBag, ShoppingCart } from "lucide-react";
+import { Package, ShoppingBag } from "lucide-react";
 import Image from "next/image";
 
-export function Title() {
+type TitleProps = {
+  hasProducts: boolean;
+};
+
+export function Title({ hasProducts }: TitleProps) {
   return (
-    <div className="flex flex-col items-center justify-center w-full h-screen space-y-8">
+    <div className="flex flex-col items-center justify-center w-full h-screen space-y-8 md:p-4 p-8">
       <div>
         <Image
           priority
@@ -17,14 +21,16 @@ export function Title() {
           Bem vindo à Byte to Byte!
         </h1>
       </div>
-      <div className="flex flex-row space-x-4">
-        <a
-          href="#product-list"
-          className="flex flex-row items-center space-x-2 p-3 bg-white/60 rounded-lg border-2 opacity-80 border-white/20 hover:opacity-100 transition-opacity"
-        >
-          <ShoppingBag size={24} color="#000" />
-          <span className="text-black">Ver Produtos</span>
-        </a>
+      <div className="flex flex-col gap-y-4 md:flex-row md:space-x-4 items-center justify-center">
+        {hasProducts && (
+          <a
+            href="#product-list"
+            className="flex flex-row items-center space-x-2 p-3 bg-white/60 rounded-lg border-2 opacity-80 border-white/20 hover:opacity-100 transition-opacity"
+          >
+            <ShoppingBag size={24} color="#000" />
+            <span className="text-black">Ver Produtos</span>
+          </a>
+        )}
         <a
           href="#create-product"
           className="flex flex-row items-center space-x-2 p-3 bg-black/30 rounded-lg border-2 opacity-80 border-white/20 hover:opacity-100 transition-opacity"

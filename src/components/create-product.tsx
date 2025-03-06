@@ -67,7 +67,7 @@ export function CreateProduct({ addProduct }: CreateProductProps) {
   return (
     <div
       id="create-product"
-      className="flex flex-col items-center w-full py-16"
+      className="flex flex-col items-center w-full md:py-16 p-4 md:p-2"
     >
       <div className="flex items-center justify-center p-4 bg-black/50 border-2 border-white/20 rounded-lg">
         <Image
@@ -79,7 +79,7 @@ export function CreateProduct({ addProduct }: CreateProductProps) {
           alt="icon"
         />
       </div>
-      <form className="flex flex-col space-y-4 w-2/5 bg-black p-8 border-2 border-white/20 rounded-lg mt-8">
+      <form className="flex flex-col space-y-4 w-full md:w-2/5 bg-black p-8 border-2 border-white/20 rounded-lg mt-8">
         <div className="flex flex-col space-y-2">
           <div className="flex flex-row space-x-2 items-center">
             <PackagePlus size={24} />
