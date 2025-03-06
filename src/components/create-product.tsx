@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,6 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Brand, Product, Section } from "@/types";
 import {
   BadgeCheck,
   CircleDollarSign,
@@ -19,8 +21,49 @@ import {
   Type,
 } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
+import { toast } from "sonner";
 
-export function CreateProduct() {
+type CreateProductProps = {
+  addProduct: (product: Product) => void;
+};
+
+export function CreateProduct({ addProduct }: CreateProductProps) {
+  const [product, setProduct] = useState<Product>({
+    id: 0,
+    brand: Brand.HP,
+    section: Section.Computadores,
+    name: "",
+    price: 0,
+    used: false,
+  });
+
+  const resetProduct = () => {
+    setProduct({
+      id: 0,
+      brand: Brand.HP,
+      section: Section.Computadores,
+      name: "",
+      price: 0,
+      used: false,
+    });
+  };
+
+  const handleSaveProduct = (product: Product) => {
+    if (!product.name) {
+      toast.error("Nome do produto é obrigatório!");
+      return;
+    }
+
+    if (!product.price) {
+      toast.error("Preço do produto é obrigatório!");
+      return;
+    }
+
+    addProduct(product);
+    resetProduct();
+  };
+
   return (
     <div
       id="create-product"
@@ -51,16 +94,25 @@ export function CreateProduct() {
             <Shapes size={20} />
             <span>Seção:</span>
           </Label>
-          <Select>
+          <Select
+            onValueChange={(section) => {
+              const newSection = Section[section as keyof typeof Section];
+              setProduct((prev) => ({ ...prev, section: newSection }));
+            }}
+            value={product.section}
+          >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Selecione uma seção..." />
             </SelectTrigger>
             <SelectContent className="dark">
-              <SelectItem value="computers">Computadores</SelectItem>
-              <SelectItem value="accessories">Acessórios</SelectItem>
-              <SelectItem value="printers">Impressoras</SelectItem>
-              <SelectItem value="games">Games</SelectItem>
-              <SelectItem value="gadgets">Gadgets</SelectItem>
+              {Object.keys(Section).map((key) => {
+                const value = Section[key as keyof typeof Section];
+                return (
+                  <SelectItem key={key} value={key}>
+                    {value}
+                  </SelectItem>
+                );
+              })}
             </SelectContent>
           </Select>
         </div>
@@ -69,16 +121,25 @@ export function CreateProduct() {
             <BadgeCheck size={20} />
             <span>Marca:</span>
           </Label>
-          <Select>
+          <Select
+            onValueChange={(brand) => {
+              const newBrand = Brand[brand as keyof typeof Brand];
+              setProduct((prev) => ({ ...prev, brand: newBrand }));
+            }}
+            value={product.brand}
+          >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Selecione uma marca..." />
             </SelectTrigger>
             <SelectContent className="dark">
-              <SelectItem value="computers">HP</SelectItem>
-              <SelectItem value="accessories">Dell</SelectItem>
-              <SelectItem value="printers">Positivo</SelectItem>
-              <SelectItem value="games">Asus</SelectItem>
-              <SelectItem value="gadgets">Sumsung</SelectItem>
+              {Object.keys(Brand).map((key) => {
+                const value = Brand[key as keyof typeof Brand];
+                return (
+                  <SelectItem key={key} value={key}>
+                    {value}
+                  </SelectItem>
+                );
+              })}
             </SelectContent>
           </Select>
         </div>
@@ -87,14 +148,43 @@ export function CreateProduct() {
             <Type size={20} />
             <span>Nome:</span>
           </Label>
-          <Input placeholder="Ex.: smartphone, notebook..." />
+          <Input
+            value={product.name}
+            onChange={(e) => {
+              const name = e.target.value;
+              setProduct((prev) => ({ ...prev, name }));
+            }}
+            placeholder="Ex.: smartphone, notebook..."
+          />
         </div>
         <div className="flex flex-col space-y-2">
           <Label className="text-base font-medium opacity-60">
             <CircleDollarSign size={20} />
             <span>Preço:</span>
           </Label>
-          <Input placeholder="Digite o preço do produto" />
+          <Input
+            type="number"
+            value={product.price === 0 ? "" : product.price}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value === "") {
+                setProduct((prev) => ({ ...prev, price: 0 }));
+                return;
+              }
+
+              const price = parseFloat(value);
+              if (price < 0 || isNaN(price)) return;
+
+              setProduct((prev) => ({ ...prev, price }));
+            }}
+            onBlur={() => {
+              setProduct((prev) => ({
+                ...prev,
+                price: !prev.price ? 0 : prev.price,
+              }));
+            }}
+            placeholder="Digite o preço do produto"
+          />
         </div>
         <div className="flex flex-row w-full space-x-2 items-center justify-between p-2">
           <div className="flex flex-col">
@@ -106,13 +196,27 @@ export function CreateProduct() {
               Marque esta opção se o produto cadastrado já foi utilizado
             </span>
           </div>
-          <Switch />
+          <Switch
+            checked={product.used}
+            onCheckedChange={(checked) => {
+              setProduct((prev) => ({ ...prev, used: checked }));
+            }}
+          />
         </div>
         <div className="flex w-full space-x-6 ">
-          <Button type="reset" className="flex-1" variant="secondary">
+          <Button
+            type="reset"
+            onClick={resetProduct}
+            className="flex-1"
+            variant="secondary"
+          >
             <span>Limpar</span>
           </Button>
-          <Button type="button" className="flex-2">
+          <Button
+            type="button"
+            className="flex-2"
+            onClick={() => handleSaveProduct(product)}
+          >
             <ShoppingBasket />
             <span>Cadastrar Produto</span>
           </Button>
