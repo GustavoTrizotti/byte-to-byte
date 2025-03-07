@@ -22,4 +22,5 @@ O projeto utiliza as seguintes tecnologias:
 
 ## 🌍 Deploy
 
-Em progresso...
+O projeto está hospedado na plataforma Vercel, garantindo uma estrutura escalável, segura e robusta para o seu funcionamento.
+Link: https://byte-to-byte.vercel.app/
